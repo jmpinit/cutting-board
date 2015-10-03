@@ -20,6 +20,16 @@ function loadImage (url, callback) {
     var overlay = new Overlay($("#overlay")[0]);
     var app = new Interactor(viewport, overlay);
 
+    // disable scrolling
+    function preventDefault(e) {
+        e = e || window.event;
+        if (e.preventDefault)
+            e.preventDefault();
+        e.returnValue = false;
+    }
+
+    window.onwheel = preventDefault;
+
     function resize () {
         $("#viewport")[0].width = $(window).width();
         $("#viewport")[0].height = $(window).height();
@@ -48,7 +58,7 @@ function loadImage (url, callback) {
         });
     });
 
-    $(document).on("mousewheel", app.scroll);
+    $(document).on("mousewheel", app.scroll.bind(app));
 
     $(document).click(function (e) {
         var rect = canvas.getBoundingClientRect();
