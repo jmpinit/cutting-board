@@ -17,6 +17,7 @@ module.exports = (function () {
         };
 
         this.center();
+        this.zoom(0);
         this.bind();
     }
 
@@ -70,6 +71,18 @@ module.exports = (function () {
         this.viewport = viewport;
         this.viewmode = new ViewMode(viewport);
         this.overlay = overlay;
+
+        var that = this;
+        function makeHighlighter (i) {
+            return function () {
+                that.viewport.highlight(i);
+            };
+        }
+
+        var layerKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        for (var i = 0; i < layerKeys.length; i++) {
+            mousetrap.bind(layerKeys[i], makeHighlighter(i));
+        }
     }
 
     Interactor.prototype = {
@@ -81,6 +94,7 @@ module.exports = (function () {
         addImage: function (image) {
             this.viewport.images.push({
                 image: image,
+                opacity: 1.0,
                 transform: [1, 0, 0, 1, 0, 0]
             });
 

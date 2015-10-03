@@ -8,6 +8,18 @@ module.exports = (function () {
     }
 
     Viewport.prototype = {
+        highlight: function (layerIndex) {
+            if (layerIndex < this.images.length) {
+                for (var i = 0; i < this.images.length; i++) {
+                    this.images[i].opacity = 0.5;
+                }
+                
+                this.images[layerIndex].opacity = 1.0;
+
+                this.render();
+            }
+        },
+
         translate: function (x, y) {
             this.x = x;
             this.y = y;
@@ -34,6 +46,7 @@ module.exports = (function () {
 
             for (var i = 0; i < this.images.length; i++) {
                 var img = this.images[i];
+                ctx.globalAlpha = img.opacity;
                 ctx.transform.apply(ctx, img.transform);
                 ctx.drawImage(img.image, 0, 0);
             }
