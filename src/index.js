@@ -1,11 +1,8 @@
 var $ = require("jquery");
 
-var viewport = require("./viewport.js");
-var overlay = require("./overlay.js");
-
-var state = {
-    images: []
-};
+var Interactor = require("./interactor.js");
+var Viewport = require("./viewport.js");
+var Overlay = require("./overlay.js");
 
 function loadImage (url, callback) {
     var image = new Image();
@@ -16,39 +13,42 @@ function loadImage (url, callback) {
     };
 }
 
-function resize () {
-    $("#viewport")[0].width = $(window).width();
-    $("#viewport")[0].height = $(window).height();
-
-    $("#overlay").offset($("#viewport").offset());
-    $("#overlay").attr("viewBox", "0 0 " + $("#viewport").width() + " " + $("#viewport").height());
-    $("#overlay").width($("#viewport").width());
-    $("#overlay").height($("#viewport").height());
-
-    viewport.render($("#viewport")[0], state);
-}
-
 (function () {
     var canvas = $("#viewport")[0];
 
-    $("#add").on("click", function () {
-        var url = $("#url").val();
+    var viewport = new Viewport(canvas);
+    var overlay = new Overlay($("#overlay")[0]);
+    var app = new Interactor(viewport, overlay);
 
-        loadImage(url, function (image) {
-            state.images.push({
-                image: image,
-                transform: [1, 0, 0, 1, 0, 0]
-            });
+    function resize () {
+        $("#viewport")[0].width = $(window).width();
+        $("#viewport")[0].height = $(window).height();
 
-            viewport.render(canvas, state);
-        });
-    });
+        $("#overlay").offset($("#viewport").offset());
+        $("#overlay").attr("viewBox", "0 0 " + $("#viewport").width() + " " + $("#viewport").height());
+        $("#overlay").width($("#viewport").width());
+        $("#overlay").height($("#viewport").height());
+
+        app.render();
+    }
 
     $(window).resize(function() {
         resize();
     });
 
     resize();
+
+    // connect event handlers
+
+    $("#add").on("click", function () {
+        var url = $("#url").val();
+
+        loadImage(url, function (image) {
+            app.addImage(image);
+        });
+    });
+
+    $(document).on("mousewheel", app.scroll);
 
     $(document).click(function (e) {
         var rect = canvas.getBoundingClientRect();
@@ -57,7 +57,7 @@ function resize () {
                 e.clientX < rect.left + canvas.width &&
                 e.clientY > rect.top &&
                 e.clientY < rect.top + canvas.height) {
-            overlay.click(e.clientX - rect.left, e.clientY - rect.top);
+            app.click(e.clientX - rect.left, e.clientY - rect.top);
         }
     });
 })();
