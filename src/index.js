@@ -1,47 +1,63 @@
 var $ = require("jquery");
 
+var viewport = require("./viewport.js");
+var overlay = require("./overlay.js");
+
 var state = {
     images: []
 };
 
-function render () {
-    var canvas = $("#viewport")[0],
-        ctx = canvas.getContext('2d');
-
-    for (var i = 0; i < state.images.length; i++) {
-        ctx.drawImage(state.images[i], 0, 0);
-    }
-}
-
 function loadImage (url, callback) {
     var image = new Image();
     image.src = url;
-    image.onload = function() {
+
+    image.onload = function () {
         callback(image);
     };
 }
 
-$("#add").on("click", function () {
-    var url = $("#url").val();
-
-    loadImage(url, function (image) {
-        state.images.push(image);
-        render();
-    });
-});
-
 function resize () {
     $("#viewport")[0].width = $(window).width();
     $("#viewport")[0].height = $(window).height();
-    render();
+
+    $("#overlay").offset($("#viewport").offset());
+    $("#overlay").attr("viewBox", "0 0 " + $("#viewport").width() + " " + $("#viewport").height());
+    $("#overlay").width($("#viewport").width());
+    $("#overlay").height($("#viewport").height());
+
+    viewport.render($("#viewport")[0], state);
 }
 
-function init () {
-    $( window ).resize(function() {
+(function () {
+    var canvas = $("#viewport")[0];
+
+    $("#add").on("click", function () {
+        var url = $("#url").val();
+
+        loadImage(url, function (image) {
+            state.images.push({
+                image: image,
+                transform: [1, 0, 0, 1, 0, 0]
+            });
+
+            viewport.render(canvas, state);
+        });
+    });
+
+    $(window).resize(function() {
         resize();
     });
 
     resize();
-}
 
-init();
+    $(document).click(function (e) {
+        var rect = canvas.getBoundingClientRect();
+
+        if (e.clientX > rect.left &&
+                e.clientX < rect.left + canvas.width &&
+                e.clientY > rect.top &&
+                e.clientY < rect.top + canvas.height) {
+            overlay.click(e.clientX - rect.left, e.clientY - rect.top);
+        }
+    });
+})();

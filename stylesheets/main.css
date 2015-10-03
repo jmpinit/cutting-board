@@ -3,6 +3,23 @@ body {
 }
 
 .toolbar {
+    width: 100%;
     background-color: black;
     padding: 1px;
+}
+
+.mode {
+    background-color: red;
+}
+
+#overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+path {
+    stroke: black;
+    stroke-width: 1px;
+    fill: none;
 }

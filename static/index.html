@@ -9,9 +9,12 @@
 </head>
 <body>
     <div class="toolbar">
-        <input id="url" type="text"></input><button id="add" type="button">add</button>
+        <input id="url" type="text">
+        </input><button id="add" type="button">add</button>
+        <span class="mode">default</span>
     </div>
     <div class="content">
+        <svg id="overlay"></svg>
         <canvas id="viewport" width="512" height="512"></canvas>
     </div>
     <script src="js/bundle.js"></script>
