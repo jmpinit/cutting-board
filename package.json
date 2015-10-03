@@ -1,0 +1,34 @@
+{
+  "name": "cutting-board",
+  "version": "1.0.0",
+  "description": "Tool for reverse-engineering PCBs.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmptable/cutting-board.git"
+  },
+  "author": "Owen Trueblood",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jmptable/cutting-board/issues"
+  },
+  "homepage": "https://github.com/jmptable/cutting-board#readme",
+  "devDependencies": {
+    "browserify": "^11.2.0",
+    "finalhandler": "^0.4.0",
+    "gulp": "^3.9.0",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-util": "^3.0.6",
+    "gulp-watch": "^4.3.5",
+    "lodash.assign": "^3.2.0",
+    "serve-static": "^1.10.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.4.0"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
+  }
+}
